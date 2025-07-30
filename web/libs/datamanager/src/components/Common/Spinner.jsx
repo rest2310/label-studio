@@ -1,5 +1,6 @@
 import { inject } from "mobx-react";
 import React from "react";
+// Reuse the main app's spinner to avoid maintaining multiple loader styles
 import { Spinner as UISpinner } from "../../../../../apps/labelstudio/src/components/Spinner/Spinner";
 
 const injector = inject(({ store }) => {
