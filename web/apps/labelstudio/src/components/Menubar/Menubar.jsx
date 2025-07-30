@@ -174,7 +174,9 @@ export const Menubar = ({ enabled, defaultOpened, defaultPinned, children, onSid
             </div>
           </div>
 
-          {ff.isActive(ff.FF_THEME_TOGGLE) && <ThemeToggle />}
+          {ff.isActive(ff.FF_THEME_TOGGLE) && (
+            <ThemeToggle style={{ display: "none" }} />
+          )}
 
           <Dropdown.Trigger
             ref={useMenuRef}
