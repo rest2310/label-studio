@@ -137,3 +137,8 @@
   border-radius: 50%;
   background: var(--primary_link);
 }
+
+/* Hide the theme toggle so it does not appear in the UI */
+.menu-header__theme-toggle {
+  display: none;
+}
