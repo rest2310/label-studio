@@ -1,6 +1,9 @@
 import { inject } from "mobx-react";
 import React from "react";
-import Running from "../../assets/running";
+// Reuse the main app's spinner from the shared UI library to keep one loader style
+// Use the existing app spinner to keep a single loader style across
+// the main application and data manager.
+import { Spinner as UISpinner } from "../../../../../apps/labelstudio/src/components/Spinner/Spinner";
 
 const injector = inject(({ store }) => {
   return {
@@ -8,8 +11,12 @@ const injector = inject(({ store }) => {
   };
 });
 
-export const Spinner = injector(({ SDK, visible = true, ...props }) => {
+export const Spinner = injector(({ SDK, visible = true, stopped = false, className, style, ...props }) => {
   const size = React.useMemo(() => {
+    if (typeof props.size === "number") return props.size;
+
+    if (!isNaN(Number(props.size))) return Number(props.size);
+
     switch (props.size) {
       case "large":
         return SDK?.spinnerSize?.large ?? 128;
@@ -22,36 +29,13 @@ export const Spinner = injector(({ SDK, visible = true, ...props }) => {
     }
   }, [props.size]);
 
-  const source = React.useMemo(() => {
-    return Running.full;
-  }, [props.size]);
-
-  const videoStyles = {
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",
-  };
-
   const ExternalSpinner = SDK?.spinner;
 
-  return visible ? (
-    <div
-      {...props}
-      style={{ width: size, height: size }}
-      children={
-        <div style={{ width: "100%", height: "100%" }}>
-          {ExternalSpinner ? (
-            <ExternalSpinner size={size} />
-          ) : (
-            <img
-              src={source.x1}
-              srcSet={[`${source.x1} 1x`, `${source.x2} 2x`].join(",")}
-              style={videoStyles}
-              alt="opossum loader"
-            />
-          )}
-        </div>
-      }
-    />
-  ) : null;
+  if (!visible) return null;
+
+  return ExternalSpinner ? (
+    <ExternalSpinner size={size} className={className} style={style} {...props} />
+  ) : (
+    <UISpinner size={size} stopped={stopped} className={className} style={style} {...props} />
+  );
 });
